@@ -1,7 +1,7 @@
 import os
-from fastapi import FastAPI
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
 
 # Load variables from .env file
 load_dotenv()
@@ -15,12 +15,11 @@ project_name = os.getenv("PROJECT_NAME", "MyApp")
 # Initialize FastAPI app
 app = FastAPI(title=project_name)
 
+
 @app.get("/")
 def greet():
-    return {
-        "message": f"Hello from {project_name} 👋",
-        "debug_mode": debug
-    }
+    return {"message": f"Hello from {project_name} 👋", "debug_mode": debug}
+
 
 @app.get("/health")
 def health_check():
