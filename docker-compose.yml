@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: fastapi-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn src.main:app --host ${APP_HOST} --port ${APP_PORT} --reload
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped

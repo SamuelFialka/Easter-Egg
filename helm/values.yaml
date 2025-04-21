@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: fastapi-app
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  port: 8000
+  nodePort: 30001
+
+app:
+  name: fastapi-app
+  containerPort: 8000
+
+env:
+  APP_HOST: "0.0.0.0"
+  APP_PORT: "8000"
+
+livenessProbe:
+  path: /health
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+readinessProbe:
+  path: /health
+  initialDelaySeconds: 3
+  periodSeconds: 5
