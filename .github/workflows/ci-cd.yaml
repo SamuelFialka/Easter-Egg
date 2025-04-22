@@ -62,15 +62,18 @@ jobs:
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
-
-      - name: Set KUBECONFIG
-        run: echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
-      - name: Deploy via Helm
+      - name: Set up Kubeconfig
         run: |
-          export KUBECONFIG=$PWD/kubeconfig.yaml
-          helm upgrade --install fastapi-app ./helm/fastapi-app --namespace default --create-namespace
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Deploy using Helm
+        run: |
+          helm upgrade --install fastapi-app ./helm \
+            --namespace default \
+            --set image.repository=${{ secrets.DOCKER_USERNAME }}/fastapi-app \
+            --set image.tag=latest
